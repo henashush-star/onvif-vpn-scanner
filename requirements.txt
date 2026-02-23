@@ -1,0 +1,7 @@
+onvif-zeep
+zeep
+requests
+lxml
+urllib3
+rich
+tqdm
