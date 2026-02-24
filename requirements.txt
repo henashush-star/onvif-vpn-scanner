@@ -4,4 +4,3 @@ requests
 lxml
 urllib3
 rich
-tqdm
