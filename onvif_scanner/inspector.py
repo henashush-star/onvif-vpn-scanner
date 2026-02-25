@@ -33,7 +33,8 @@ class CameraInspector:
                 manufacturer=getattr(device_info, 'Manufacturer', 'Unknown'),
                 model=getattr(device_info, 'Model', 'Unknown'),
                 firmware=getattr(device_info, 'FirmwareVersion', 'Unknown'),
-                serial=getattr(device_info, 'SerialNumber', 'Unknown')
+                serial=getattr(device_info, 'SerialNumber', 'Unknown'),
+                inspection_status="ok"
             )
         except Exception as e:
             logger.error(f"Failed to get device info for {self.ip}: {e}")
@@ -42,7 +43,8 @@ class CameraInspector:
                 manufacturer="Unknown",
                 model="Unknown",
                 firmware="Unknown",
-                serial="Unknown"
+                serial="Unknown",
+                inspection_status="incomplete_data"
             )
 
     def get_profiles(self) -> List[StreamProfile]:
