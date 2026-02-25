@@ -22,7 +22,17 @@ class CameraInspector:
 
     def get_device_info(self) -> CameraInfo:
         if not self.camera:
-            self.connect()
+            try:
+                self.connect()
+            except Exception:
+                return CameraInfo(
+                    ip=self.ip,
+                    manufacturer="Unknown",
+                    model="Unknown",
+                    firmware="Unknown",
+                    serial="Unknown",
+                    inspection_status="failed_connect"
+                )
 
         try:
             devicemgmt = self.camera.create_devicemgmt_service()
@@ -33,7 +43,8 @@ class CameraInspector:
                 manufacturer=getattr(device_info, 'Manufacturer', 'Unknown'),
                 model=getattr(device_info, 'Model', 'Unknown'),
                 firmware=getattr(device_info, 'FirmwareVersion', 'Unknown'),
-                serial=getattr(device_info, 'SerialNumber', 'Unknown')
+                serial=getattr(device_info, 'SerialNumber', 'Unknown'),
+                inspection_status="success"
             )
         except Exception as e:
             logger.error(f"Failed to get device info for {self.ip}: {e}")
@@ -42,12 +53,16 @@ class CameraInspector:
                 manufacturer="Unknown",
                 model="Unknown",
                 firmware="Unknown",
-                serial="Unknown"
+                serial="Unknown",
+                inspection_status="incomplete_data"
             )
 
     def get_profiles(self) -> List[StreamProfile]:
         if not self.camera:
-            self.connect()
+            try:
+                self.connect()
+            except Exception:
+                return []
 
         profiles_list = []
         try:
@@ -78,7 +93,10 @@ class CameraInspector:
 
     def get_ptz_status(self) -> PTZInfo:
         if not self.camera:
-            self.connect()
+            try:
+                self.connect()
+            except Exception:
+                return PTZInfo(supported=False)
 
         supported = False
         status = None

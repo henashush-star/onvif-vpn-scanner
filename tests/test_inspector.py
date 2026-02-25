@@ -26,6 +26,7 @@ class TestCameraInspector(unittest.TestCase):
 
         self.assertEqual(info.manufacturer, "TestMfg")
         self.assertEqual(info.model, "TestModel")
+        self.assertEqual(info.inspection_status, "success")
 
     @patch('onvif_scanner.inspector.ONVIFCamera')
     def test_get_profiles(self, mock_onvif_camera):
@@ -52,3 +53,12 @@ class TestCameraInspector(unittest.TestCase):
         self.assertEqual(len(profiles), 1)
         self.assertEqual(profiles[0].name, "Profile1")
         self.assertEqual(profiles[0].rtsp_uri, "rtsp://test/1")
+
+    @patch('onvif_scanner.inspector.ONVIFCamera')
+    def test_connection_error(self, mock_onvif_camera):
+        mock_onvif_camera.side_effect = Exception("Connection refused")
+
+        inspector = CameraInspector("1.2.3.4", "user", "pass")
+        info = inspector.get_device_info()
+
+        self.assertEqual(info.inspection_status, "failed_connect")

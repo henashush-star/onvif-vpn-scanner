@@ -34,3 +34,4 @@ class CameraInfo:
     serial: str
     profiles: List[StreamProfile] = field(default_factory=list)
     ptz: Optional[PTZInfo] = None
+    inspection_status: str = "success"
