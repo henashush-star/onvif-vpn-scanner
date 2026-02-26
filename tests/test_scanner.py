@@ -47,3 +47,26 @@ class TestIPRangeScanner(unittest.TestCase):
             # Test port closed
             mock_sock_instance.connect_ex.return_value = 1
             self.assertFalse(scanner._check_onvif("192.168.1.11", 1.0))
+
+    def test_check_onvif_timeouts(self):
+        scanner = IPRangeScanner("10.0.0.0/24")
+
+        with patch('socket.socket') as mock_socket, \
+             patch('onvif_scanner.scanner.requests.get') as mock_get:
+
+            mock_sock_instance = MagicMock()
+            mock_socket.return_value.__enter__.return_value = mock_sock_instance
+            mock_sock_instance.connect_ex.return_value = 0
+
+            mock_get.return_value.status_code = 200
+
+            scan_timeout = 5.0
+            scanner._check_onvif("192.168.1.10", scan_timeout)
+
+            # Verify socket timeout was set to 0.2 (new behavior)
+            mock_sock_instance.settimeout.assert_called_with(0.2)
+
+            # Verify requests.get used scan_timeout
+            mock_get.assert_called()
+            args, kwargs = mock_get.call_args
+            self.assertEqual(kwargs['timeout'], scan_timeout)
