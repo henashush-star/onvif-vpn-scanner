@@ -120,7 +120,7 @@ class IPRangeScanner:
         return sorted(found_ips)
 
     def _check_onvif(self, ip: str, timeout: float) -> bool:
-        ports = [80, 8000, 8080, 8888, 37777]
+        ports = [80, 8080, 8000, 8888, 5005, 37777]
 
         for port in ports:
             try:
