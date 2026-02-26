@@ -1,7 +1,7 @@
 from onvif import ONVIFCamera
 from .models import CameraInfo, StreamProfile, PTZInfo, PTZStatus, PTZLimits
 import logging
-from typing import List, Tuple, Optional
+from typing import List, Optional
 
 logger = logging.getLogger(__name__)
 
